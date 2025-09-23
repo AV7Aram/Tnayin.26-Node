@@ -7,25 +7,45 @@ import './Cart.css';
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { isAuthenticated, user } = useAuth();
+    const { isAuthenticated, user, isAdmin } = useAuth();
 
     useEffect(() => {
-        if (isAuthenticated && user) {
+        if (isAuthenticated && user && !isAdmin) {
             fetchCart();
+        } else {
+            setLoading(false);
         }
-    }, [isAuthenticated, user]);
+    }, [isAuthenticated, user, isAdmin]);
 
     const fetchCart = async () => {
         try {
             const response = await cartAPI.getCart(user.id);
-            setCartItems(response.data.items || []);
+            const items = (response.data?.items || []).map(item => ({
+                ...item,
+                ...(item.product || {}),
+            }));
+            setCartItems(items);
         } catch (error) {
-            console.error('Error fetching cart:', error);
             toast.error('Ошибка загрузки корзины');
         } finally {
             setLoading(false);
         }
     };
+
+    if (!isAuthenticated) return <div>Войдите для просмотра корзины</div>;
+    if (isAdmin) {
+        return (
+            <div className="cart-page">
+                <div className="admin-no-cart">
+                    <span className="admin-icon">👑</span>
+                    <h2>У администратора нет корзины</h2>
+                    <p>Администратор управляет товарами и заказами, но не совершает покупки.</p>
+                </div>
+            </div>
+        );
+    }
+    if (loading) return <div>Загрузка...</div>;
+    if (cartItems.length === 0) return <div>Корзина пуста</div>;
 
     const updateQuantity = async (productId, newQuantity) => {
         if (newQuantity < 1) return;
@@ -56,7 +76,6 @@ const Cart = () => {
             toast.error('Ошибка удаления товара');
         }
     };
-
     const getTotalPrice = () => {
         return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
     };
@@ -101,38 +120,28 @@ const Cart = () => {
                             <div className="item-image">
                                 <img src={item.image || '/placeholder-product.jpg'} alt={item.name} />
                             </div>
-
                             <div className="item-details">
                                 <h3 className="item-name">{item.name}</h3>
                                 <p className="item-price">{item.price} ₽</p>
                             </div>
-
                             <div className="item-quantity">
                                 <button
                                     onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                                     className="quantity-btn"
-                                >
-                                    -
-                                </button>
+                                >-</button>
                                 <span className="quantity">{item.quantity}</span>
                                 <button
                                     onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                                     className="quantity-btn"
-                                >
-                                    +
-                                </button>
+                                >+</button>
                             </div>
-
                             <div className="item-total">
                                 {item.price * item.quantity} ₽
                             </div>
-
                             <button
                                 onClick={() => removeItem(item.productId)}
                                 className="remove-btn"
-                            >
-                                🗑️
-                            </button>
+                            >🗑️</button>
                         </div>
                     ))}
                 </div>

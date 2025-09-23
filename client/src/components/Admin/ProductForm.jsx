@@ -13,7 +13,15 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(formData);
+        const productData = {
+            name: formData.name,
+            price: Number(formData.price),
+            description: formData.description,
+            image: formData.image,
+            category: formData.category,
+            stock: Number(formData.stock),
+        };
+        onSubmit(productData);
     };
 
     const handleChange = (e) => {
@@ -27,7 +35,6 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
         <div className="product-form-overlay">
             <div className="product-form">
                 <h2>{product ? 'Редактировать товар' : 'Добавить товар'}</h2>
-
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>Название:</label>
@@ -39,7 +46,6 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
                             required
                         />
                     </div>
-
                     <div className="form-group">
                         <label>Цена:</label>
                         <input
@@ -50,7 +56,6 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
                             required
                         />
                     </div>
-
                     <div className="form-group">
                         <label>Категория:</label>
                         <input
@@ -61,7 +66,6 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
                             required
                         />
                     </div>
-
                     <div className="form-group">
                         <label>Описание:</label>
                         <textarea
@@ -71,7 +75,6 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
                             required
                         />
                     </div>
-
                     <div className="form-group">
                         <label>Количество:</label>
                         <input
@@ -82,7 +85,6 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
                             required
                         />
                     </div>
-
                     <div className="form-group">
                         <label>Изображение (URL):</label>
                         <input
@@ -92,7 +94,6 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
                             onChange={handleChange}
                         />
                     </div>
-
                     <div className="form-actions">
                         <button type="submit" className="submit-btn">
                             {product ? 'Обновить' : 'Добавить'}
