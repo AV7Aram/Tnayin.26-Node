@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
+import PasswordInput from '../components/PasswordInput/PasswordInput';
 import './Auth.css';
 
 const Login = () => {
@@ -10,6 +12,11 @@ const Login = () => {
         password: ''
     });
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(prev => !prev);
+    };
 
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -57,17 +64,14 @@ const Login = () => {
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label>Пароль:</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            placeholder="Введите ваш пароль"
-                        />
-                    </div>
+                    <PasswordInput
+                        label="Пароль:"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        placeholder="Введите ваш пароль"
+                    />
 
                     <button
                         type="submit"

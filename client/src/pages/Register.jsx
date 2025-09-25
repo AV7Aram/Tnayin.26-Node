@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
+import PasswordInput from '../components/PasswordInput/PasswordInput';
 import './Auth.css';
 
 const Register = () => {
@@ -81,29 +82,23 @@ const Register = () => {
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label>Пароль:</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            placeholder="Придумайте пароль"
-                        />
-                    </div>
+                    <PasswordInput
+                        label="Пароль:"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        placeholder="Придумайте пароль"
+                    />
 
-                    <div className="form-group">
-                        <label>Подтверждение пароля:</label>
-                        <input
-                            type="password"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            required
-                            placeholder="Повторите пароль"
-                        />
-                    </div>
+                    <PasswordInput
+                        label="Подтверждение пароля:"
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        required
+                        placeholder="Повторите пароль"
+                    />
 
                     <button
                         type="submit"
