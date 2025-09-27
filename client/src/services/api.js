@@ -3,35 +3,47 @@ import axios from 'axios';
 const API_BASE_URL = 'http://localhost:5000/api';
 
 const api = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 // Products API
 export const productsAPI = {
-    getAll: () => api.get('/products'),
-    create: (product) => api.post('/products', product),
-    update: (id, product) => api.put(`/products/${id}`, product),
-    delete: (id) => api.delete(`/products/${id}`),
+  getAll: () => api.get('/products'),
+  create: (product) => api.post('/products', product),
+  update: (id, product) => api.put(`/products/${id}`, product),
+  delete: (id) => api.delete(`/products/${id}`),
 };
 
 // Auth API
 export const authAPI = {
-    login: (email, password) => api.post('/auth/login', { email, password }),
-    register: (userData) => api.post('/auth/register', userData),
+  login: (email, password) => api.post('/auth/login', { email, password }),
+  register: (userData) => api.post('/auth/register', userData),
 };
 
 // Cart API
 export const cartAPI = {
   getCart: (userId) => api.get(`/cart/${userId}`),
-  addToCart: (userId, productId, quantity = 1) => 
+  addToCart: (userId, productId, quantity = 1) =>
     api.post(`/cart/${userId}/add`, { productId, quantity }),
   updateCart: (userId, items) => api.put(`/cart/${userId}`, { items }),
   clearCart: (userId) => api.delete(`/cart/${userId}`),
 };
 
+// Users API
+export const usersAPI = {
+  get: (id) => api.get(`/users/${id}`),
+  uploadAvatar: (id, file) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    return api.post(`/users/${id}/avatar`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+  },
+  deleteAvatar: (id) => api.delete(`/users/${id}/avatar`)
+};
 
 api.interceptors.request.use(
   (config) => {

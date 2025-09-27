@@ -10,6 +10,7 @@ import Products from './pages/Products/Products';
 import Cart from './pages/Cart/Cart';
 import Admin from './pages/Admin/Admin';
 import ProtectedRoute from './components/Common/ProtectedRoute';
+import Profile from './pages/Profile/Profile';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -37,6 +38,14 @@ function App() {
                 element={
                   <ProtectedRoute requireAdmin={true}>
                     <Admin />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
                   </ProtectedRoute>
                 }
               />

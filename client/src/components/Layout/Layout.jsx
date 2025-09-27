@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import './Layout.css';
 
 const Layout = ({ children }) => {
-    const { user, logout, isAdmin } = useAuth();
+    const { user, logout, isAdmin, isAuthenticated } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -27,7 +27,11 @@ const Layout = ({ children }) => {
                         {user ? (
                             <div className="user-menu">
                                 {isAdmin && <Link to="/admin">Админка</Link>}
-                                <span>Привет, {user.email}</span>
+                                {isAuthenticated && (
+                                    <span className="nav-user" onClick={() => navigate('/profile')}>
+                                        Привет, {user.username}
+                                    </span>
+                                )}
                                 <button onClick={handleLogout} className="logout-btn">
                                     Выйти
                                 </button>

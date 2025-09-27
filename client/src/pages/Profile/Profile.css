@@ -1,0 +1,44 @@
+.profile-page {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(44, 62, 80, 0.08);
+    padding: 32px;
+    text-align: center;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 24px;
+    justify-content: center;
+}
+
+.profile-avatar {
+    border: 3px solid #6c63ff;
+}
+
+.avatar-form {
+    margin-top: 16px;
+}
+
+.avatar-form input[type="file"] {
+    margin-bottom: 12px;
+}
+
+.avatar-form button {
+    padding: 10px 24px;
+    background: #6c63ff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.avatar-form button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
