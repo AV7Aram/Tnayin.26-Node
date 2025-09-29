@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { cartAPI } from '../../services/api';
 import { toast } from 'react-toastify';
+import productIcon from '../../assets/product-icon.png'
 import './ProductCard.css';
 
 const ProductCard = ({ product, onEdit, onDelete }) => {
@@ -20,7 +21,7 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
   return (
     <div className="product-card">
       <div className="product-image">
-        <img src={product.image || '/placeholder-product.jpg'} alt={product.name} />
+        <img src={product.image || productIcon} alt={product.name} className={product.name}/>
       </div>
 
       <div className="product-info">

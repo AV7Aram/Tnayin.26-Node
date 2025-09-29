@@ -1,10 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-
 class UserController {
     async getUser(req, res) {
         try {
-            const user = await req.app.locals.models.user.findById(req.params.id);
+            const user = await req.app.locals.services.user.getUserById(req.params.id);
             if (!user) return res.status(404).json({ error: 'User not found' });
             res.json(user);
         } catch (error) {
@@ -14,19 +11,9 @@ class UserController {
 
     async uploadAvatar(req, res) {
         try {
-            const user = await req.app.locals.models.user.findById(req.params.id);
-            if (!user) return res.status(404).json({ error: 'User not found' });
-
             if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-
-            if (user.avatar) {
-                const oldPath = path.join(__dirname, '..', user.avatar);
-                fs.unlink(oldPath, err => {});
-            }
-
-            user.avatar = `/uploads/${req.file.filename}`;
-            await user.save();
-            res.json({ success: true, avatar: user.avatar });
+            const avatar = await req.app.locals.services.user.updateAvatar(req.params.id, req.file);
+            res.json({ success: true, avatar });
         } catch (error) {
             res.status(400).json({ error: error.message });
         }
@@ -34,15 +21,7 @@ class UserController {
 
     async deleteAvatar(req, res) {
         try {
-            const user = await req.app.locals.models.user.findById(req.params.id);
-            if (!user) return res.status(404).json({ error: 'User not found' });
-
-            if (user.avatar) {
-                const avatarPath = path.join(__dirname, '..', user.avatar);
-                fs.unlink(avatarPath, err => {});
-                user.avatar = '';
-                await user.save();
-            }
+            await req.app.locals.services.user.deleteAvatar(req.params.id);
             res.json({ success: true });
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -50,4 +29,4 @@ class UserController {
     }
 }
 
-module.exports = { UserController };
+module.exports = { UserController }

@@ -12,7 +12,7 @@ const authenticate = async (req, res, next) => {
         const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
         const [email, password] = credentials.split(':');
         
-        const user = await req.app.locals.services.user.findUserByEmail(email);
+        const user = await req.app.locals.services.auth.findUserByEmail(email);
         
         if (!user) {
             return res.status(401).json({ error: 'Authentication failed' });

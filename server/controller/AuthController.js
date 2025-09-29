@@ -5,14 +5,14 @@ class AuthController {
         try {
             const { email, password, username } = req.body;
 
-            const existingUser = await req.app.locals.services.user.findUserByEmail(email);
+            const existingUser = await req.app.locals.services.auth.findUserByEmail(email);
             if (existingUser) {
                 return res.status(400).json({ error: 'User already exists' });
             }
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            const userId = await req.app.locals.services.user.createUser({
+            const userId = await req.app.locals.services.auth.createUser({
                 email,
                 password: hashedPassword,
                 username
@@ -32,7 +32,7 @@ class AuthController {
         try {
             const { email, password } = req.body;
             
-            const user = await req.app.locals.services.user.findUserByEmail(email);
+            const user = await req.app.locals.services.auth.findUserByEmail(email);
 
             if (!user) {
                 return res.status(401).json({ error: 'Invalid credentials' });

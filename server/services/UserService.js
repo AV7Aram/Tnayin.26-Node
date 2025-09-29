@@ -1,28 +1,38 @@
+const fs = require('fs');
+const path = require('path');
+
 class UserService {
     constructor(models) {
         this.models = models;
     }
 
-    async findUserByEmail(email) {
-        return await this.models.user.findOne({ email });
+    async getUserById(id) {
+        return await this.models.user.findById(id);
     }
 
-    async createUser(userData) {
-        const user = new this.models.user(userData);
+    async updateAvatar(id, file) {
+        const user = await this.getUserById(id);
+
+        if (user.avatar) {
+            const oldPath = path.join(__dirname, '..', user.avatar);
+            fs.unlink(oldPath, () => { });
+        }
+
+        user.avatar = `/uploads/${file.filename}`;
         await user.save();
-        return user._id;
+        return user.avatar;
     }
 
-    async getUserCart(userId) {
-        return await this.models.cart.findOne({ userId }).populate('items.productId');
-    }
-
-    async updateUserCart(userId, cartItems) {
-        return await this.models.cart.findOneAndUpdate(
-            { userId },
-            { items: cartItems, updatedAt: new Date() },
-            { upsert: true, new: true }
-        )
+    async deleteAvatar(id) {
+        const user = await this.getUserById(id);
+        
+        if (user.avatar) {
+            const avatarPath = path.join(__dirname, '..', user.avatar);
+            fs.unlink(avatarPath, () => { });
+            user.avatar = '';
+            await user.save();
+        }
+        return true;
     }
 }
 

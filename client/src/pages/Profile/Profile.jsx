@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { usersAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
+import defaultPng from '../../assets/default-avatar.jpg'
 import './Profile.css'
 
 const Profile = () => {
@@ -62,14 +63,15 @@ const Profile = () => {
             <h2>Профиль пользователя</h2>
             <div className="profile-info">
                 <img
-                    src={profile.avatar ? `http://localhost:5000${profile.avatar}` : '/placeholder-avatar.png'}
+                    src={profile.avatar ? `http://localhost:5000${profile.avatar}` : defaultPng}
                     alt="avatar"
                     className="profile-avatar"
                     style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover' }}
                 />
-                <div>
+                <div className='user-info'>
                     <p><b>Имя:</b> {profile.username}</p>
                     <p><b>Email:</b> {profile.email}</p>
+                    <p><b>Role:</b> {profile.role}</p>
                 </div>
             </div>
             <form onSubmit={handleAvatarUpload} className="avatar-form">

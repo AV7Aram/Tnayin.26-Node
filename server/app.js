@@ -9,9 +9,10 @@ const productsRouter = require('./routes/products');
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const cartRouter = require('./routes/cart');
-const { UserService } = require('./services/UserService');
+const { AuthService } = require('./services/AuthService');
 const { ProductService } = require('./services/ProductService');
 const { CartService } = require('./services/CartService');
+const { UserService } = require('./services/UserService');
 
 const models = require('./models');
 
@@ -43,7 +44,8 @@ app.locals.models = {
 }
 
 app.locals.services = {
-  user: new UserService(app.locals.models),
+  auth: new AuthService(app.locals.models),   
+  user: new UserService(app.locals.models),   
   prod: new ProductService(app.locals.models),
   cart: new CartService(app.locals.models)
 };
