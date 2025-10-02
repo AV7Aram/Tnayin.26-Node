@@ -39,7 +39,12 @@ export const usersAPI = {
     const formData = new FormData();
     formData.append('avatar', file);
     return api.post(`/users/${id}/avatar`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }).catch((error) => {
+        if (error.response?.data?.error === 'File size exceeds the 10MB limit') {
+            throw new Error('Файл слишком большой. Максимальный размер 10MB.');
+        }
+        throw error;
     });
   },
   deleteAvatar: (id) => api.delete(`/users/${id}/avatar`)

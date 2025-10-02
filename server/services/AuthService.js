@@ -12,6 +12,10 @@ class AuthService {
         await user.save();
         return user._id;
     }
+
+    async validatePassword(user, password) {
+        return await user.comparePassword(password);
+    }
 }
 
 module.exports = { AuthService };

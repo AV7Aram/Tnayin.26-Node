@@ -25,7 +25,12 @@ const Profile = () => {
     };
 
     const handleAvatarChange = (e) => {
-        setAvatarFile(e.target.files[0]);
+        const file = e.target.files[0];
+        if (file && file.size > 10 * 1024 * 1024) { 
+            toast.error('Файл слишком большой. Максимальный размер 10MB.');
+            return;
+        }
+        setAvatarFile(file);
     };
 
     const handleAvatarUpload = async (e) => {

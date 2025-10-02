@@ -1,5 +1,3 @@
-const bcrypt = require('bcryptjs');
-
 class AuthController {
     async register(req, res) {
         try {
@@ -10,11 +8,9 @@ class AuthController {
                 return res.status(400).json({ error: 'User already exists' });
             }
 
-            const hashedPassword = await bcrypt.hash(password, 10);
-
             const userId = await req.app.locals.services.auth.createUser({
                 email,
-                password: hashedPassword,
+                password,
                 username
             });
 
@@ -38,7 +34,7 @@ class AuthController {
                 return res.status(401).json({ error: 'Invalid credentials' });
             }
 
-            const isPasswordValid = await bcrypt.compare(password, user.password);
+           const isPasswordValid = await req.app.locals.services.auth.validatePassword(user, password);
             if (!isPasswordValid) {
                 return res.status(401).json({ error: 'Invalid credentials' });
             }

@@ -32,7 +32,16 @@ const Cart = () => {
         }
     };
 
-    if (!isAuthenticated) return <div>Войдите для просмотра корзины</div>;
+    if (!isAuthenticated) {
+        return (
+            <div className="cart-page">
+                <div className="auth-required">
+                    <h2>Для просмотра корзины необходимо войти в аккаунт</h2>
+                    <p>Пожалуйста, войдите или зарегистрируйтесь</p>
+                </div>
+            </div>
+        );
+    }
     if (isAdmin) {
         return (
             <div className="cart-page">
@@ -44,8 +53,20 @@ const Cart = () => {
             </div>
         );
     }
-    if (loading) return <div>Загрузка...</div>;
-    if (cartItems.length === 0) return <div>Корзина пуста</div>;
+    if (loading) {
+        return <div className="loading">Загрузка корзины...</div>;
+    }
+
+    if (cartItems.length === 0) {
+        return (
+            <div className="cart-page">
+                <div className="empty-cart">
+                    <h2>Корзина пуста</h2>
+                    <p>Добавьте товары из каталога</p>
+                </div>
+            </div>
+        );
+    }
 
     const updateQuantity = async (productId, newQuantity) => {
         if (newQuantity < 1) return;
@@ -79,32 +100,6 @@ const Cart = () => {
     const getTotalPrice = () => {
         return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
     };
-
-    if (!isAuthenticated) {
-        return (
-            <div className="cart-page">
-                <div className="auth-required">
-                    <h2>Для просмотра корзины необходимо войти в аккаунт</h2>
-                    <p>Пожалуйста, войдите или зарегистрируйтесь</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (loading) {
-        return <div className="loading">Загрузка корзины...</div>;
-    }
-
-    if (cartItems.length === 0) {
-        return (
-            <div className="cart-page">
-                <div className="empty-cart">
-                    <h2>Корзина пуста</h2>
-                    <p>Добавьте товары из каталога</p>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="cart-page">
