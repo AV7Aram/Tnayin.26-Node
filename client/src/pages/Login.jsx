@@ -18,7 +18,7 @@ const Login = () => {
         setShowPassword(prev => !prev);
     };
 
-    const { login } = useAuth();
+    const { login, isAuthenticated } = useAuth();
     const navigate = useNavigate();
 
     const handleChange = (e) => {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usersAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import defaultPng from '../../assets/default-avatar.jpg'
+import defaultPng from '../../assets/avatar-default-icon.png'
 import './Profile.css'
 
 const Profile = () => {
@@ -10,6 +10,9 @@ const Profile = () => {
     const [profile, setProfile] = useState(null);
     const [avatarFile, setAvatarFile] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const inputFileRef = useRef(null);
+    const fileLabelRef = useRef(null);
 
     useEffect(() => {
         if (user) fetchProfile();
@@ -26,12 +29,25 @@ const Profile = () => {
 
     const handleAvatarChange = (e) => {
         const file = e.target.files[0];
-        if (file && file.size > 10 * 1024 * 1024) { 
+        if (file && file.size > 10 * 1024 * 1024) {
             toast.error('Файл слишком большой. Максимальный размер 10MB.');
             return;
         }
         setAvatarFile(file);
+        updateFileLabel(e.target.files);
     };
+
+    const updateFileLabel = (files) => {
+        const label = fileLabelRef.current;
+        const labelVal = label.querySelector('.field__file-fake').innerText;
+        let countFiles = '';
+        if (files && files.length >= 1) countFiles = files.length;
+        if (countFiles)
+            label.querySelector('.field__file-fake').innerText = `Выбрано файлов: ${countFiles}`;
+        else
+            label.querySelector('.field__file-fake').innerText = labelVal;
+    };
+
 
     const handleAvatarUpload = async (e) => {
         e.preventDefault();
@@ -80,20 +96,33 @@ const Profile = () => {
                 </div>
             </div>
             <form onSubmit={handleAvatarUpload} className="avatar-form">
-                <input type="file" accept="image/*" onChange={handleAvatarChange} />
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Загрузка...' : profile.avatar ? 'Сменить аватарку' : 'Добавить аватарку'}
-                </button>
-                {profile.avatar && (
-                    <button
-                        type="button"
-                        onClick={handleDeleteAvatar}
-                        disabled={loading}
-                        style={{ marginLeft: 12, background: '#e74c3c' }}
-                    >
-                        Удалить аватарку
+                <div className="field__wrapper">
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarChange}
+                        id="field__file-2"
+                        className="field field__file"
+                        ref={inputFileRef}
+                    />
+                    <label className="field__file-wrapper" for="field__file-2" ref={fileLabelRef}>
+                        <div className="field__file-fake">Файл не вбран</div>
+                        <div className="field__file-button">Выбрать</div>
+                    </label>
+                    {profile.avatar && (
+                        <button
+                            type="button"
+                            onClick={handleDeleteAvatar}
+                            disabled={loading}
+                            style={{ marginRight: 12, background: '#e74c3c' }}
+                        >
+                            Удалить аватарку
+                        </button>
+                    )}
+                    <button type="submit" disabled={loading}>
+                        {loading ? 'Загрузка...' : profile.avatar ? 'Сменить аватарку' : 'Добавить аватарку'}
                     </button>
-                )}
+                </div>
             </form>
         </div>
     );
