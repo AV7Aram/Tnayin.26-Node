@@ -25,6 +25,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    additionalImages: [{
+        type: String,
+        default: []
+    }],
     updatedAt: {
         type: Date
     }

@@ -12,9 +12,18 @@ const api = axios.create({
 // Products API
 export const productsAPI = {
   getAll: () => api.get('/products'),
+  getById: (id) => api.get(`/products/${id}`),
   create: (product) => api.post('/products', product),
   update: (id, product) => api.put(`/products/${id}`, product),
   delete: (id) => api.delete(`/products/${id}`),
+  addImage: (id, file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    return api.post(`/products/${id}/images`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+  },
+  removeImage: (id, imagePath) => api.delete(`/products/${id}/images`, { data: { imagePath } })
 };
 
 // Auth API
@@ -39,12 +48,12 @@ export const usersAPI = {
     const formData = new FormData();
     formData.append('avatar', file);
     return api.post('/users/avatar', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 'Content-Type': 'multipart/form-data' }
     }).catch((error) => {
-        if (error.response?.data?.error === 'File size exceeds the 10MB limit') {
-            throw new Error('Файл слишком большой. Максимальный размер 10MB.');
-        }
-        throw error;
+      if (error.response?.data?.error === 'File size exceeds the 10MB limit') {
+        throw new Error('Файл слишком большой. Максимальный размер 10MB.');
+      }
+      throw error;
     });
   },
   deleteAvatar: () => api.delete('/users/avatar')

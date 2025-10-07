@@ -55,7 +55,8 @@
   line-height: 1.4;
 }
 
-.product-category, .product-stock {
+.product-category,
+.product-stock {
   color: #7f8c8d;
   font-size: 14px;
   margin-bottom: 5px;
@@ -98,7 +99,8 @@
   gap: 10px;
 }
 
-.edit-btn, .delete-btn {
+.edit-btn,
+.delete-btn {
   padding: 8px 12px;
   border: none;
   border-radius: 6px;
@@ -122,4 +124,40 @@
 
 .delete-btn:hover {
   background: #c0392b;
+}
+
+/* ***************************** */
+
+.clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.product-image.clickable {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.product-image.clickable:hover {
+    transform: scale(1.02);
+}
+
+.product-name.clickable:hover {
+    color: #3498db;
+}
+
+.image-btn {
+    padding: 8px 12px;
+    background: #9b59b6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 14px;
+}
+
+.image-btn:hover {
+    background: #8e44ad;
+    transform: translateY(-1px);
 }

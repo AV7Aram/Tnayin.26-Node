@@ -11,6 +11,7 @@ import Cart from './pages/Cart/Cart';
 import Admin from './pages/Admin/Admin';
 import ProtectedRoute from './components/Common/ProtectedRoute';
 import Profile from './pages/Profile/Profile';
+import ProductDetail from './pages/ProductDetail/ProductDetail'; // Добавляем если еще нет
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -25,14 +26,10 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/products" element={<Products />} />
-              <Route
-                path="/cart"
-                element={
-                  <ProtectedRoute>
-                    <Cart />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              
+              <Route path="/cart" element={<Cart />} />
+              
               <Route
                 path="/admin"
                 element={

@@ -8,6 +8,8 @@ import './Products.css';
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [uploadingImageFor, setUploadingImageFor] = useState(null);
   const { isAdmin } = useAuth();
 
   useEffect(() => {
@@ -18,6 +20,7 @@ const Products = () => {
     try {
       const response = await productsAPI.getAll();
       setProducts(response.data);
+      console.log('Products loaded:', response.data); // Отладка
     } catch (error) {
       toast.error('Ошибка загрузки товаров');
     } finally {
@@ -25,8 +28,8 @@ const Products = () => {
     }
   };
 
-  const handleAddToCart = (product) => {
-    toast.success(`${product.name} добавлен в корзину!`);
+  const handleAddImage = (product) => {
+    setUploadingImageFor(product);
   };
 
   if (loading) return <div className="loading">Загрузка...</div>;
@@ -35,11 +38,6 @@ const Products = () => {
     <div className="products-page">
       <div className="products-header">
         <h1>Каталог товаров</h1>
-        {isAdmin && (
-          <button className="add-product-btn">
-            Добавить товар
-          </button>
-        )}
       </div>
 
       <div className="products-grid">
@@ -47,7 +45,9 @@ const Products = () => {
           <ProductCard
             key={product._id}
             product={product}
-            onAddToCart={handleAddToCart}
+            onEdit={setEditingProduct}
+            onDelete={() => { }}
+            onAddImage={handleAddImage}
           />
         ))}
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import ProductCard from '../../components/Products/ProductCard';
 import ProductForm from '../../components/Admin/ProductForm';
+import ImageUploadForm from '../../components/ImageUploadForm/ImageUploadForm';
 import { productsAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import './Admin.css';
@@ -10,6 +11,7 @@ const Admin = () => {
     const [products, setProducts] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
+    const [uploadingImageFor, setUploadingImageFor] = useState(null);
     const { isAdmin } = useAuth();
 
     useEffect(() => {
@@ -61,6 +63,21 @@ const Admin = () => {
         }
     };
 
+    const handleAddImage = (product) => {
+        setUploadingImageFor(product);
+    };
+
+    const handleImageUpload = async (file) => {
+        try {
+            await productsAPI.addImage(uploadingImageFor._id, file);
+            toast.success('Изображение добавлено');
+            setUploadingImageFor(null);
+            fetchProducts();
+        } catch (error) {
+            toast.error('Ошибка загрузки изображения');
+        }
+    };
+
     if (!isAdmin) {
         return <div className="access-denied">Доступ запрещен</div>;
     }
@@ -84,6 +101,7 @@ const Admin = () => {
                         product={product}
                         onEdit={setEditingProduct}
                         onDelete={handleDeleteProduct}
+                        onAddImage={handleAddImage}
                     />
                 ))}
             </div>
@@ -100,6 +118,14 @@ const Admin = () => {
                     product={editingProduct}
                     onSubmit={handleEditProduct}
                     onCancel={() => setEditingProduct(null)}
+                />
+            )}
+
+            {uploadingImageFor && (
+                <ImageUploadForm
+                    product={uploadingImageFor}
+                    onSubmit={handleImageUpload}
+                    onCancel={() => setUploadingImageFor(null)}
                 />
             )}
         </div>

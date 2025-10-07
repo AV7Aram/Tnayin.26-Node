@@ -6,6 +6,10 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
   const { isAuthenticated, isAdmin } = useAuth();
 
   if (!isAuthenticated) {
+    const currentPath = window.location.pathname;
+    if (currentPath === '/cart') {
+      return children; 
+    }
     return <Navigate to="/login" replace />;
   }
 
