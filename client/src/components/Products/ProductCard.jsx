@@ -6,11 +6,11 @@ import productIcon from '../../assets/product-icon.png'
 import './ProductCard.css';
 
 const ProductCard = ({ product, onEdit, onDelete }) => {
-  const { isAuthenticated, isAdmin, user } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
 
   const handleAddToCart = async () => {
     try {
-      await cartAPI.addToCart(user.id, product._id, 1);
+      await cartAPI.addToCart(product._id, 1);
       toast.success(`${product.name} добавлен в корзину!`);
     } catch (error) {
       console.error('Error adding to cart:', error);

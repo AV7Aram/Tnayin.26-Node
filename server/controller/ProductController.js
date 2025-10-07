@@ -1,7 +1,7 @@
 class ProductController {
     async getProducts(req, res) {
         try {
-            const products = await req.app.locals.services.prod.getAllProducts();
+            const products = await req.app.locals.services.prod.getProducts();
             res.json(products);
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -10,10 +10,6 @@ class ProductController {
 
     async createProduct(req, res) {
         try {
-            if (req.user.role !== 'admin') {
-                return res.status(403).json({ error: 'Access denied' });
-            }
-
             const productId = await req.app.locals.services.prod.createProduct(req.body);
             res.status(201).json({ id: productId, message: 'Product created' });
         } catch (error) {
@@ -27,6 +23,9 @@ class ProductController {
                 req.params.id,
                 req.body
             );
+            if (!updated) {
+                return res.status(404).json({ error: 'Product not found' });
+            }
             res.json({ success: true, updated });
         } catch (error) {
             res.status(400).json({ success: false, error: error.message });
@@ -35,12 +34,11 @@ class ProductController {
 
     async deleteProduct(req, res) {
         try {
-            if (req.user.role !== 'admin') {
-                return res.status(403).json({ error: 'Access denied' });
+            const deletedCount = await req.app.locals.services.prod.deleteProduct(req.params.id);
+            if (deletedCount === 0) {
+                return res.status(404).json({ error: 'Product not found' });
             }
-
-            const deleted = await req.app.locals.services.prod.deleteProduct(req.params.id);
-            res.json({ deleted, message: 'Product deleted' });
+            res.json({ deleted: deletedCount, message: 'Product deleted' });
         } catch (error) {
             res.status(400).json({ error: error.message });
         }

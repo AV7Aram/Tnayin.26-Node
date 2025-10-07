@@ -20,7 +20,7 @@ const Profile = () => {
 
     const fetchProfile = async () => {
         try {
-            const res = await usersAPI.get(user.id);
+            const res = await usersAPI.get(); 
             setProfile(res.data);
         } catch (error) {
             toast.error('Ошибка загрузки профиля');
@@ -48,13 +48,12 @@ const Profile = () => {
             label.querySelector('.field__file-fake').innerText = labelVal;
     };
 
-
     const handleAvatarUpload = async (e) => {
         e.preventDefault();
         if (!avatarFile) return;
         setLoading(true);
         try {
-            await usersAPI.uploadAvatar(user.id, avatarFile);
+            await usersAPI.uploadAvatar(avatarFile);
             toast.success('Аватарка обновлена!');
             fetchProfile();
         } catch (error) {
@@ -67,7 +66,7 @@ const Profile = () => {
     const handleDeleteAvatar = async () => {
         setLoading(true);
         try {
-            await usersAPI.deleteAvatar(user.id);
+            await usersAPI.deleteAvatar(); 
             toast.success('Аватарка удалена!');
             fetchProfile();
         } catch (error) {
@@ -105,8 +104,8 @@ const Profile = () => {
                         className="field field__file"
                         ref={inputFileRef}
                     />
-                    <label className="field__file-wrapper" for="field__file-2" ref={fileLabelRef}>
-                        <div className="field__file-fake">Файл не вбран</div>
+                    <label className="field__file-wrapper" htmlFor="field__file-2" ref={fileLabelRef}>
+                        <div className="field__file-fake">Файл не выбран</div>
                         <div className="field__file-button">Выбрать</div>
                     </label>
                     {profile.avatar && (

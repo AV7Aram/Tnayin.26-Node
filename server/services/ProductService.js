@@ -3,12 +3,8 @@ class ProductService {
         this.models = models;
     }
 
-    async getAllProducts() {
+    async getProducts() {
         return await this.models.prod.find();
-    }
-
-    async getProductById(id) {
-        return await this.models.prod.findById(id);
     }
 
     async createProduct(productData) {

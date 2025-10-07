@@ -1,7 +1,7 @@
 class CartController {
   async getCart(req, res) {
     try {
-      const cart = await req.app.locals.services.cart.getCart(req.params.userId);
+      const cart = await req.app.locals.services.cart.getCart(req.user.id);
       res.json(cart);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -12,7 +12,7 @@ class CartController {
     try {
       const { productId, quantity } = req.body;
       const cart = await req.app.locals.services.cart.addToCart(
-        req.params.userId,
+        req.user.id,
         productId,
         quantity || 1
       );
@@ -25,7 +25,7 @@ class CartController {
   async updateCart(req, res) {
     try {
       const cart = await req.app.locals.services.cart.updateCart(
-        req.params.userId,
+        req.user.id,
         req.body.items
       );
       res.json(cart);
@@ -36,7 +36,7 @@ class CartController {
 
   async clearCart(req, res) {
     try {
-      const cart = await req.app.locals.services.cart.clearCart(req.params.userId);
+      const cart = await req.app.locals.services.cart.clearCart(req.user.id);
       res.json(cart);
     } catch (error) {
       res.status(400).json({ error: error.message });

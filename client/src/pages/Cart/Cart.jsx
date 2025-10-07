@@ -10,16 +10,16 @@ const Cart = () => {
     const { isAuthenticated, user, isAdmin } = useAuth();
 
     useEffect(() => {
-        if (isAuthenticated && user && !isAdmin) {
+        if (isAuthenticated && !isAdmin) {
             fetchCart();
         } else {
             setLoading(false);
         }
-    }, [isAuthenticated, user, isAdmin]);
+    }, [isAuthenticated, isAdmin]);
 
     const fetchCart = async () => {
         try {
-            const response = await cartAPI.getCart(user.id);
+            const response = await cartAPI.getCart(); 
             const items = (response.data?.items || []).map(item => ({
                 ...item,
                 ...(item.product || {}),
@@ -76,7 +76,7 @@ const Cart = () => {
         );
 
         try {
-            await cartAPI.updateCart(user.id, updatedItems);
+            await cartAPI.updateCart(updatedItems);
             setCartItems(updatedItems);
             toast.success('Корзина обновлена');
         } catch (error) {
@@ -89,7 +89,7 @@ const Cart = () => {
         const updatedItems = cartItems.filter(item => item.productId !== productId);
 
         try {
-            await cartAPI.updateCart(user.id, updatedItems);
+            await cartAPI.updateCart(updatedItems); 
             setCartItems(updatedItems);
             toast.success('Товар удален из корзины');
         } catch (error) {
@@ -97,6 +97,7 @@ const Cart = () => {
             toast.error('Ошибка удаления товара');
         }
     };
+
     const getTotalPrice = () => {
         return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
     };

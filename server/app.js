@@ -38,14 +38,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.locals.models = {
-  user: models.user,
+  users: models.users,
   prod: models.prod,
   cart: models.cart
 }
 
 app.locals.services = {
   auth: new AuthService(app.locals.models),   
-  user: new UserService(app.locals.models),   
+  users: new UserService(app.locals.models),   
   prod: new ProductService(app.locals.models),
   cart: new CartService(app.locals.models)
 };

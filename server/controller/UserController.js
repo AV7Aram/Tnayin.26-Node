@@ -1,7 +1,7 @@
 class UserController {
     async getUser(req, res) {
         try {
-            const user = await req.app.locals.services.user.getUserById(req.params.id);
+            const user = await req.app.locals.services.users.getUser(req.user.id);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
@@ -16,7 +16,7 @@ class UserController {
             if (!req.file) {
                 return res.status(400).json({ error: 'No file uploaded' });
             }
-            const avatar = await req.app.locals.services.user.updateAvatar(req.params.id, req.file);
+            const avatar = await req.app.locals.services.users.updateAvatar(req.user.id, req.file);
             res.json({ success: true, avatar });
         } catch (error) {
             if (error.code === 'LIMIT_FILE_SIZE') {
@@ -28,7 +28,7 @@ class UserController {
 
     async deleteAvatar(req, res) {
         try {
-            await req.app.locals.services.user.deleteAvatar(req.params.id);
+            await req.app.locals.services.users.deleteAvatar(req.user.id);
             res.json({ success: true });
         } catch (error) {
             res.status(400).json({ error: error.message });

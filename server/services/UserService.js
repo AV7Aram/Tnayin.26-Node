@@ -6,29 +6,46 @@ class UserService {
         this.models = models;
     }
 
-    async getUserById(id) {
-        return await this.models.user.findById(id);
+    async getUser(id) {
+        const user = await this.models.users.findById(id)
+        if (!user) {
+            throw new Error('User not found');
+        }
+        const { __v, password, ...userData } = user._doc
+        return { ...userData }
     }
 
     async updateAvatar(id, file) {
-        const user = await this.getUserById(id);
+        const user = await this.models.users.findById(id);
+        if (!user) {
+            throw new Error('User not found');
+        }
 
-        if (user.avatar) {
+        if (user.avatar && user.avatar !== '') {
             const oldPath = path.join(__dirname, '..', user.avatar);
-            fs.unlink(oldPath, () => { });
+            if (fs.existsSync(oldPath)) {
+                fs.unlinkSync(oldPath);
+            }
         }
 
         user.avatar = `/uploads/${file.filename}`;
         await user.save();
-        return user.avatar;
+
+        const { __v, password, ...userData } = user._doc;
+        return userData.avatar;
     }
 
     async deleteAvatar(id) {
-        const user = await this.getUserById(id);
-        
-        if (user.avatar) {
+        const user = await this.models.users.findById(id);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        if (user.avatar && user.avatar !== '') {
             const avatarPath = path.join(__dirname, '..', user.avatar);
-            fs.unlink(avatarPath, () => { });
+            if (fs.existsSync(avatarPath)) {
+                fs.unlinkSync(avatarPath);
+            }
             user.avatar = '';
             await user.save();
         }

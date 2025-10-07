@@ -23,22 +23,22 @@ export const authAPI = {
   register: (userData) => api.post('/auth/register', userData),
 };
 
-// Cart API
+// Cart API 
 export const cartAPI = {
-  getCart: (userId) => api.get(`/cart/${userId}`),
-  addToCart: (userId, productId, quantity = 1) =>
-    api.post(`/cart/${userId}/add`, { productId, quantity }),
-  updateCart: (userId, items) => api.put(`/cart/${userId}`, { items }),
-  clearCart: (userId) => api.delete(`/cart/${userId}`),
+  getCart: () => api.get('/cart'),
+  addToCart: (productId, quantity = 1) =>
+    api.post('/cart/add', { productId, quantity }),
+  updateCart: (items) => api.put('/cart', { items }),
+  clearCart: () => api.delete('/cart'),
 };
 
-// Users API
+// Users API 
 export const usersAPI = {
-  get: (id) => api.get(`/users/${id}`),
-  uploadAvatar: (id, file) => {
+  get: () => api.get('/users/profile'),
+  uploadAvatar: (file) => {
     const formData = new FormData();
     formData.append('avatar', file);
-    return api.post(`/users/${id}/avatar`, formData, {
+    return api.post('/users/avatar', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
     }).catch((error) => {
         if (error.response?.data?.error === 'File size exceeds the 10MB limit') {
@@ -47,7 +47,7 @@ export const usersAPI = {
         throw error;
     });
   },
-  deleteAvatar: (id) => api.delete(`/users/${id}/avatar`)
+  deleteAvatar: () => api.delete('/users/avatar')
 };
 
 api.interceptors.request.use(
@@ -56,9 +56,8 @@ api.interceptors.request.use(
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
-        if (user.email && user.password) {
-          const auth = btoa(`${user.email}:${user.password}`);
-          config.headers.Authorization = `Basic ${auth}`;
+        if (user.token) {
+          config.headers.Authorization = `Bearer ${user.token}`;
         }
       } catch (error) {
         console.error('Error parsing user data:', error);
@@ -76,7 +75,6 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('user');
-      localStorage.removeItem('auth');
       window.location.href = '/login';
     }
     return Promise.reject(error);
